@@ -1,5 +1,6 @@
-Instructions
-------------
+# Instructions
+
+## Building
 
 1. Clone this repository, and cd to it in a console
 2. Download the libuv repository using
@@ -15,6 +16,8 @@ Instructions
         cmake ..
         make
 
+## Using
+
 I've added a couple things to make it simple to
 get this library into your other cmake projects.  Use 
 something like the following in your CMakeLists.txt.
@@ -27,12 +30,12 @@ something like the following in your CMakeLists.txt.
         
 This works because
 
-1. CMake's package registry[1] feature 
+1. CMake's [package registry][1] feature 
    helps find_package find your build directory.
 
 2. A script, `uv-config.cmake`, is run by `find_package()`.
    It defineds the `target_add_uv()` function.  That takes
-   your target and ammends the target properties so it
+   your target and amends the target properties so it
    links libuv, any system dependencies and adds include
    directories.
 
