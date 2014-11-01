@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+project(uv)
 
 set(LIBUVDIR libuv)
 
@@ -62,3 +63,21 @@ else()
 endif()
 
 add_library(uv ${SOURCES})
+
+### INSTALL ###
+
+install(TARGETS uv ARCHIVE DESTINATION lib)
+file(GLOB_RECURSE HDRS ${LIBUVDIR}/include/*.h)
+install(FILES ${HDRS} DESTINATION include)
+
+### PACKAGE CONFIG ###
+
+export(PACKAGE uv)
+export(TARGETS uv FILE uv-targets-config.cmake)
+
+include(CMakePackageConfigHelpers)
+set(UV_INCLUDE_DIR ${LIBUVDIR}/include)
+configure_package_config_file(uv-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/uv-config.cmake
+    INSTALL_DESTINATION xxx
+    PATH_VARS UV_INCLUDE_DIR)

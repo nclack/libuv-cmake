@@ -1,0 +1,25 @@
+@PACKAGE_INIT@
+include("${CMAKE_CURRENT_LIST_DIR}/uv-targets-config.cmake")
+set_and_check(UV_INCLUDE_DIR "@PACKAGE_UV_INCLUDE_DIR@")
+check_required_components(uv)
+
+
+function(target_add_uv target)
+
+    if(WIN32)
+        find_library(SHELL32  shell32)
+        find_library(ADVAPI32 advapi32)  
+        find_library(IPHLPAPI iphlpapi)  
+        find_library(PSAPI    psapi)  
+        find_library(WS2_32   ws2_32)   # in the windows sdk
+    endif()
+
+    set_property(TARGET ${target} APPEND PROPERTY
+                 INCLUDE_DIRECTORIES ${UV_INCLUDE_DIR})
+    target_link_libraries(${target} uv
+                                    ADVAPI32
+                                    IPHLPAPI
+                                    PSAPI
+                                    SHELL32
+                                    WS2_32) 
+endfunction()
