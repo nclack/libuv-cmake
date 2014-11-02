@@ -3,66 +3,20 @@ project(uv)
 
 set(LIBUVDIR libuv)
 
-include_directories(${LIBUVDIR}/include ${LIBUVDIR}/src)
-set(SOURCES
-  ${LIBUVDIR}/src/fs-poll.c
-  ${LIBUVDIR}/src/inet.c
-  ${LIBUVDIR}/src/uv-common.c
-  ${LIBUVDIR}/src/version.c)
+include_directories(${LIBUVDIR}/include  
+                    ${LIBUVDIR}/src)
+file(GLOB SOURCES ${LIBUVDIR}/src/*.c ${LIBUVDIR}/src/*.h)
 
 if(WIN32)
   add_definitions(-DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0600 -D_CRT_SECURE_NO_WARNINGS)
   include_directories(${LIBUVDIR}/src/win)
-  set(SOURCES ${SOURCES}
-    ${LIBUVDIR}/src/win/async.c
-    ${LIBUVDIR}/src/win/core.c
-    ${LIBUVDIR}/src/win/dl.c
-    ${LIBUVDIR}/src/win/error.c
-    ${LIBUVDIR}/src/win/fs-event.c
-    ${LIBUVDIR}/src/win/fs.c
-    ${LIBUVDIR}/src/win/getaddrinfo.c
-    ${LIBUVDIR}/src/win/handle.c
-    ${LIBUVDIR}/src/win/loop-watcher.c
-    ${LIBUVDIR}/src/win/pipe.c
-    ${LIBUVDIR}/src/win/poll.c
-    ${LIBUVDIR}/src/win/process-stdio.c
-    ${LIBUVDIR}/src/win/process.c
-    ${LIBUVDIR}/src/win/req.c
-    ${LIBUVDIR}/src/win/signal.c
-    ${LIBUVDIR}/src/win/stream.c
-    ${LIBUVDIR}/src/win/tcp.c
-    ${LIBUVDIR}/src/win/thread.c
-    ${LIBUVDIR}/src/win/threadpool.c
-    ${LIBUVDIR}/src/win/timer.c
-    ${LIBUVDIR}/src/win/tty.c
-    ${LIBUVDIR}/src/win/udp.c
-    ${LIBUVDIR}/src/win/util.c
-    ${LIBUVDIR}/src/win/winapi.c
-    ${LIBUVDIR}/src/win/winsock.c)
+  file(GLOB SYS ${LIBUVDIR}/src/win/*.c ${LIBUVDIR}/src/win/*.h)
 else()
   include_directories(${LIBUVDIR}/src/unix)
-  set(SOURCES ${SOURCES}
-    ${LIBUVDIR}/src/unix/async.c
-    ${LIBUVDIR}/src/unix/core.c
-    ${LIBUVDIR}/src/unix/dl.c
-    ${LIBUVDIR}/src/unix/fs.c
-    ${LIBUVDIR}/src/unix/getaddrinfo.c
-    ${LIBUVDIR}/src/unix/loop-watcher.c
-    ${LIBUVDIR}/src/unix/loop.c
-    ${LIBUVDIR}/src/unix/pipe.c
-    ${LIBUVDIR}/src/unix/poll.c
-    ${LIBUVDIR}/src/unix/process.c
-    ${LIBUVDIR}/src/unix/signal.c
-    ${LIBUVDIR}/src/unix/stream.c
-    ${LIBUVDIR}/src/unix/tcp.c
-    ${LIBUVDIR}/src/unix/thread.c
-    ${LIBUVDIR}/src/unix/threadpool.c
-    ${LIBUVDIR}/src/unix/timer.c
-    ${LIBUVDIR}/src/unix/tty.c
-    ${LIBUVDIR}/src/unix/udp.c)
+  file(GLOB SYS ${LIBUVDIR}/src/unix/*.c ${LIBUVDIR}/src/unix/*.h)
 endif()
 
-add_library(uv ${SOURCES})
+add_library(uv ${SOURCES} ${SYS})
 
 ### INSTALL ###
 
@@ -78,6 +32,6 @@ export(TARGETS uv FILE uv-targets-config.cmake)
 include(CMakePackageConfigHelpers)
 set(UV_INCLUDE_DIR ${LIBUVDIR}/include)
 configure_package_config_file(uv-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/uv-config.cmake
-    INSTALL_DESTINATION xxx
+    ${CMAKE_CURRENT_BINARY_DIR}/uv-config.cmake          
+    INSTALL_DESTINATION xxx    # not sure what this does
     PATH_VARS UV_INCLUDE_DIR)
